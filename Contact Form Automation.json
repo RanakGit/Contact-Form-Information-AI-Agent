@@ -1,0 +1,225 @@
+{
+  "name": "Contact Form Automation",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Contact Us - RAC Insurance",
+        "formDescription": "Give us your details and we will reach out",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Name",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Email",
+              "fieldType": "email",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "What is your Query"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.5,
+      "position": [
+        0,
+        -80
+      ],
+      "id": "51fa8036-585a-4374-af57-b5c4be3d5805",
+      "name": "On form submission",
+      "webhookId": "2f5a2774-3f50-4299-ac5f-4c8199bfbca2"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1tsR9B6jgbCGtf8KBJJtDT9FHhyyv2vcYmpaYC1CG9Ks",
+          "mode": "list",
+          "cachedResultName": "Contact Form Information - ranakhalder1@gmail.com",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1tsR9B6jgbCGtf8KBJJtDT9FHhyyv2vcYmpaYC1CG9Ks/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1tsR9B6jgbCGtf8KBJJtDT9FHhyyv2vcYmpaYC1CG9Ks/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            " Name": "={{ $json.Name }}",
+            "Query": "={{ $json['What is your Query'] }}",
+            "Email": "={{ $json.Email }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": " Name",
+              "displayName": " Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Query",
+              "displayName": "Query",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Mobile",
+              "displayName": "Mobile",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "useAppend": true
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        224,
+        -80
+      ],
+      "id": "aed7310d-935e-4a39-ba36-98e108ea216a",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "thm9SJgX8TAddGT8",
+          "name": "Google Sheets account - ranakahalder1@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.Email }}",
+        "subject": "Got New Query",
+        "emailType": "text",
+        "message": "=Hey  {{ $json.name }}\n\nWe have received your email the query \n\nQuery - {{ $('On form submission').item.json['What is your Query'] }} \n\nRegards,\nRAC Insurance",
+        "options": {
+          "appendAttribution": false,
+          "ccList": "agnibhachakraborty.746@gmail.com"
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        448,
+        16
+      ],
+      "id": "15ca2162-b488-47b4-acce-f27e27a43b4b",
+      "name": "Send a message",
+      "webhookId": "7f0be25b-cd6a-4513-8b74-6b533f232c63",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "qbUOSJrJqAYGU6Mv",
+          "name": "Gmail OAuth2 API - ranakhalder1@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C0B437R88HY",
+          "mode": "list",
+          "cachedResultName": "all-carbon-x-inc"
+        },
+        "text": "=Hey we got a query  {{ $('On form submission').item.json['What is your Query'] }}\n\nName{{ $('On form submission').item.json.Name }}  \n\nEmail {{ $('On form submission').item.json.Email }} ",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.4,
+      "position": [
+        448,
+        -176
+      ],
+      "id": "b5dec444-93dc-47bf-8916-a07456f71359",
+      "name": "Send a message1",
+      "webhookId": "dba01eb8-f7b2-4c44-afe8-044ca7555e30",
+      "credentials": {
+        "slackOAuth2Api": {
+          "id": "vqBRRmh0dIH05bO5",
+          "name": "Slack OAuth2 API"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send a message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "19e84af9-0582-4fb9-8484-0ece6c3f5988",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "1cda0640d3326cce26b465918d314fa0add466e193cc3807d2f7acb8dfbc222c"
+  },
+  "id": "hg3K0nY3U0iPv3py",
+  "tags": []
+}
